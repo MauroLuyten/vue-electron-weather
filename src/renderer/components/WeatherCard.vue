@@ -58,7 +58,7 @@ export default {
             return this.weather.weather[0].icon
         },
         iconPath() {
-            return `/src/renderer/assets/weather-icons/${this.icon}.svg`
+            return `static/weather-icons/${this.icon}.svg`
         }
     }
 }
