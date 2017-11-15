@@ -20,7 +20,7 @@
                 </v-select>
                 <weathercard>
                 </weathercard>
-                <v-card>
+                <v-card v-if="!weather">
                     <v-card-title>
                         <h5>Welcome</h5>
                     </v-card-title>
@@ -59,6 +59,9 @@ export default {
             set(value){
                 this.$store.dispatch('clearError')
             }
+        },
+        weather() {
+            return this.$store.getters.getCurrentWeather
         }
         
     }

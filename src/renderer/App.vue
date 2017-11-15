@@ -33,7 +33,7 @@
                 {{title}}
             </v-toolbar-title>
             <v-text-field 
-            @keyup.enter="searchWeather()"
+            @keyup.native.enter="searchWeather()"
             class="ml-3" 
             append-icon="search" 
             v-model="search"

@@ -9,7 +9,9 @@ export default new Vuex.Store({
     state: {
         weatherCache: [],
         currentWeather: null,
-        weatherSource: 'http://localhost:8080/weather?city=',
+        cityInfo:null,
+        reviews:null,
+        weatherSource: 'http://localhost:8765/composite/destinationData?city=',
         weatherSourceType: 'local',
         error: null,
 
@@ -20,6 +22,12 @@ export default new Vuex.Store({
         },
         setCurrentWeather(state, payload) {
             state.currentWeather = payload.weather
+        },
+        setCurrentCityInfo(state, payload){
+            state.cityInfo = payload.cityInfo
+        },
+        setCurrentReviews(state, payload){
+            state.reviews = payload.reviews
         },
         setWeatherSource(state, payload) {
             state.weatherSource = payload
@@ -48,15 +56,22 @@ export default new Vuex.Store({
                 
             })
             .then(response => {
-                commit('addWeatherForCity', {weather: response.data})
-                commit('setCurrentWeather', {weather: response.data})
+                if(getters.getWeatherSourceType==='local'){
+                    commit('addWeatherForCity', {weather: response.data.data})
+                    commit('setCurrentWeather', {weather: response.data.data})
+                    commit('setCurrentReviews', {reviews: response.data.review})
+                    commit('setCurrentCityInfo', {cityInfo: response.data.destination})
+                } else{
+                    commit('addWeatherForCity', {weather: response.data})
+                    commit('setCurrentWeather', {weather: response.data})
+                }
             }).catch(error=>{
                 commit('setError', error)
             })
         },
         changeWeatherSource({commit}, payload) {
             if(payload.source==='local'){
-                commit('setWeatherSource', 'http://localhost:8080/weather?city=' )
+                commit('setWeatherSource', 'http://localhost:8765/composite/destinationData?city=' )
                 commit('setWeatherSourceType', payload.source )
             } else if(payload.source==='openWeatherMap'){
                 commit('setWeatherSource', 'http://api.openweathermap.org/data/2.5/weather?q=' )
@@ -86,6 +101,12 @@ export default new Vuex.Store({
         },
         getWeatherSourceType (state) {
             return state.weatherSourceType
+        },
+        getCurrentCityInfo(state){
+            return state.cityInfo
+        },
+        getCurrentReviews(state){
+            return state.reviews
         }
     }
   
